@@ -1,10 +1,9 @@
-import express from 'express';
+const  express = require('express');
+//import {PrismaClient} from '@prisma/client'
+const {getUsers, getUser, createUser,
+    deleteUser,updateUser} = require('../controllers/users.js');
 
-
-import {getUsers, getUser, createUser,
-    deleteUser,updateUser} from '../controllers/users.js';
-
-
+//const prisma = new PrismaClient
 const router = express.Router();
 
 router.get('/',getUsers);
@@ -17,4 +16,4 @@ router.delete('/:id',deleteUser);
 
 router.patch('/:id',updateUser);
 
-export default router;
+module.exports= router;
