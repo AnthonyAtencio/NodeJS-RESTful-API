@@ -12,7 +12,8 @@ CREATE TABLE "Products" (
     "name" TEXT NOT NULL,
     "price" INTEGER NOT NULL DEFAULT 99999,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "categoryId" INTEGER NOT NULL
+    "categoryId" INTEGER NOT NULL,
+    CONSTRAINT "Products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable

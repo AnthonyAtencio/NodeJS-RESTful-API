@@ -1,38 +1,51 @@
 const uuidv4= require('uuid').v4;
-
-
+const {PrismaClient} = require('@prisma/client')
+const prisma = new PrismaClient()
 let users = [];
 
 
 //Consultar  todos los usuarios
-module.exports.getUsers= (req, res) => {
-    res.send(users);
+module.exports.getUsers= async (req, res, next) => {
+    try{
+        const products = await prisma.products.findMany({
+            include:{category: true}
+        })
+        res.json(products);
+    }catch(error){
+        next(error)
+    }
+    
 }
 
 //Consultar usuario con ID especificado
-module.exports.getUser =  (req, res) => {
-    const { id } = req.params;
-    const foundUser = users.find((user) => user.id === id);
-    console.log(foundUser);
-    res.send(foundUser);
+module.exports.getUser = async (req, res, next) => {
+    try{
+        const { id } = req.params;
+        const foundUser = users.find((user) => user.id === id);
+        console.log(foundUser);
+        res.send(foundUser);
+    }catch(error){
+        next(error);
+    }    
+
 }
 
 // Añadir nuevo usuario a la base de datos
-module.exports.createUser= (req, res) => {
+module.exports.createUser= async (req, res, next) => {
     const newUser = req.body;
     users.push({ ...newUser, id: uuidv4() }); // se crea id único para el nuevo usuario
     res.send(`The user ${newUser.firstName} has been added to the database.`);
 }
 
 //Borrar usuario con ID especificado
-module.exports.deleteUser= (req, res) => {
+module.exports.deleteUser= async (req, res, next) => {
     const { id } = req.params;
     users = users.filter((user) => user.id !== id);
     res.send(`The user with ID ${id} has been deleted from the database.`);
 }
 
 //Modificar usuario con ID especificado y con los parámetros mencionados dentro del body
-module.exports.updateUser= (req, res) => {
+module.exports.updateUser= async (req, res, next) => {
     const { id } = req.params;
     const { firstName, lastName, age} = req.body;
     const user = users.find((user) => user.id === id);
