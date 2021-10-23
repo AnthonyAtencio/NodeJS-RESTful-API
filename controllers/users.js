@@ -5,7 +5,7 @@ let users = [];
 
 
 //Consultar  todos los usuarios
-module.exports.getUsers= async (req, res, next) => {
+module.exports.getAllUsers= async (req, res, next) => {
     try{
         const products = await prisma.products.findMany({
             include:{category: true}

@@ -1,5 +1,6 @@
 const  express = require('express');
 const usersRouter  = require('./routes/users.js');
+const productsRouter  = require('./routes/products.js');
 
 const app = express();
 const PORT = 3000;
@@ -10,7 +11,7 @@ app.use(express.urlencoded({extended: true}));
 
 // Routes
 app.use('/users',usersRouter);
-app.use('/products',usersRouter);
+app.use('/products',productsRouter);
 
 // Homepage
 app.get('/',async (req, res, next)=>{

@@ -24,6 +24,7 @@ model Products {
   createdAt  DateTime @default(now())
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
+  stock      Int      @default(1)
 }
 
 model Category {
