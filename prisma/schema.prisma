@@ -12,8 +12,11 @@ datasource db {
 
 model Users {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
+  name      String   
+  lastName  String 
   age       Int
+  tel       Int      
+  email     String   @unique
   createdAt DateTime @default(now())
 }
 

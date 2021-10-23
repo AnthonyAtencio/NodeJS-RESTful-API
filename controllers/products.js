@@ -1,81 +1,81 @@
-const {PrismaClient} = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 //Consultar  todos los usuarios
-module.exports.getAllProducts= async (req, res, next) => {
-    try{
+module.exports.getAllProducts = async (req, res, next) => {
+    try {
         const products = await prisma.products.findMany({
-            include:{category: true}
+            include: { category: true }
         });
         res.json(products);
-    }catch(error){
+    } catch (error) {
         next(error);
     }
-    
+
 }
 
 // Añadir nuevo producto a la base de datos
-module.exports.createProduct= async (req, res, next) => {
-    try{
-        const product=await prisma.products.create({
-            data:req.body
+module.exports.createProduct = async (req, res, next) => {
+    try {
+        const product = await prisma.products.create({
+            data: req.body
             // Alternativa {name: req.body.name,price:req.body.price}
         })
         res.json(product);
-    }catch(error){
+    } catch (error) {
         next(error);
     }
-    
+
 }
 
 //Consultar producto con ID especificado
 module.exports.getProduct = async (req, res, next) => {
-    try{
+    try {
         const { id } = req.params;
         const foundProduct = await prisma.products.findUnique({
-            where:{
-                id:Number(id),
+            where: {
+                id: Number(id),
             },
-            include:{category: true}
+            include: { category: true }
         })
         res.json(foundProduct);
-    }catch(error){
+    } catch (error) {
         next(error);
-    }    
+    }
 }
 
 //Eliminar un producto con ID especificado
 module.exports.deleteProduct = async (req, res, next) => {
-    try{
+    try {
         const { id } = req.params;
         const deletedProduct = await prisma.products.delete({
-            where:{
-                id:Number(id),
+            where: {
+                id: Number(id),
             }
         })
         res.json(deletedProduct);
-    }catch(error){
+    } catch (error) {
         next(error);
-    }    
+    }
 }
 
 //Modificar usuario con ID especificado y con los parámetros mencionados dentro del body
-module.exports.updateProduct= async (req, res, next) => {
-    try{
+module.exports.updateProduct = async (req, res, next) => {
+    try {
         const { id } = req.params;
-    const { name, price, categoryId} = req.body;
-    const product = await prisma.products.update({
-        where: {
-            id:Number(id)
-        },
-        data:req.body,
-        include:{
-            category:true
-        },
-    })
-    res.json(product)
-    }catch(error){
+        const { name, price, categoryId } = req.body;
+        const product = await prisma.products.update({
+            where: {
+                id: Number(id)
+            },
+            data: req.body,
+            include: {
+                category: true
+            },
+        })
+        res.json(product)
+    } catch (error) {
         next(error);
     }
-    
- }
+
+}

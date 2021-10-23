@@ -1,9 +1,9 @@
 {
   "name": "backend-development-test-1",
   "version": "1.0.0",
-  "description": "",
+  "description": "Test- creación de API",
   "main": "index.js",
-    "scripts": {
+  "scripts": {
     "start": "nodemon index.js"
   },
   "repository": {
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/AnthonyAtencio/backend-development-test.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Anthony Atencio",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/AnthonyAtencio/backend-development-test/issues"
@@ -19,8 +19,7 @@
   "homepage": "https://github.com/AnthonyAtencio/backend-development-test#readme",
   "dependencies": {
     "@prisma/client": "^3.3.0",
-    "express": "^4.17.1",
-    "uuid": "^8.3.2"
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.14",
