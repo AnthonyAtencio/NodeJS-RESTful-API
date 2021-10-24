@@ -11,13 +11,14 @@ datasource db {
 }
 
 model Users {
-  id        Int      @id @default(autoincrement())
-  name      String
-  lastName  String
-  age       Int
-  tel       Int
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id              Int               @id @default(autoincrement())
+  name            String
+  lastName        String
+  age             Int
+  tel             Int
+  email           String            @unique
+  createdAt       DateTime          @default(now())
+  purchaseHistory purchaseHistory[]
 }
 
 model Products {
@@ -39,6 +40,8 @@ model Category {
 
 model purchaseHistory {
   id         Int      @id @default(autoincrement())
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
   product    Products @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  Int
   categoryId Int
