@@ -1,20 +1,22 @@
-const  express = require('express');
-const usersRouter  = require('./routes/users.js');
-const productsRouter  = require('./routes/products.js');
+const express = require('express');
+const usersRouter = require('./routes/users.js');
+const productsRouter = require('./routes/products.js');
+const categoriesRouter = require('./routes/categories.js');
 
 const app = express();
 const PORT = 3000;
 
 // Colocando express.json and .urlencoded como función middleware
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/users',usersRouter);
-app.use('/products',productsRouter);
+app.use('/users', usersRouter);
+app.use('/products', productsRouter);
+app.use('/categories', categoriesRouter);
 
 // Homepage
-app.get('/',async (req, res, next)=>{
+app.get('/', async (req, res, next) => {
     res.send('Hello from homepage');
 });
 

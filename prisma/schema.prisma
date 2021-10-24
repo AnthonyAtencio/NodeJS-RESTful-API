@@ -12,26 +12,35 @@ datasource db {
 
 model Users {
   id        Int      @id @default(autoincrement())
-  name      String   
-  lastName  String 
+  name      String
+  lastName  String
   age       Int
-  tel       Int      
+  tel       Int
   email     String   @unique
   createdAt DateTime @default(now())
 }
 
 model Products {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
-  price      Int      @default(99999)
-  createdAt  DateTime @default(now())
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
-  stock      Int      @default(1)
+  id               Int               @id @default(autoincrement())
+  name             String            @unique
+  price            Int               @default(99999)
+  createdAt        DateTime          @default(now())
+  category         Category          @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  categoryId       Int
+  stock            Int               @default(1)
+  purchaseQuantity purchaseHistory[]
 }
 
 model Category {
   id       Int        @id @default(autoincrement())
   name     String     @unique
   products Products[]
+}
+
+model purchaseHistory {
+  id         Int      @id @default(autoincrement())
+  product    Products @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  Int
+  categoryId Int
+  quantity   Int      @default(1)
 }

@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-//Consultar  todos los usuarios
+//Consultar  todos los productos
 module.exports.getAllProducts = async (req, res, next) => {
     try {
         const products = await prisma.products.findMany({
@@ -19,8 +19,7 @@ module.exports.createProduct = async (req, res, next) => {
     try {
         const product = await prisma.products.create({
             data: req.body
-            // Alternativa {name: req.body.name,price:req.body.price}
-        })
+               })
         res.json(product);
     } catch (error) {
         next(error);
@@ -59,11 +58,10 @@ module.exports.deleteProduct = async (req, res, next) => {
     }
 }
 
-//Modificar usuario con ID especificado y con los parámetros mencionados dentro del body
+//Modificar producto con ID especificado y con los parámetros mencionados dentro del body
 module.exports.updateProduct = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { name, price, categoryId } = req.body;
         const product = await prisma.products.update({
             where: {
                 id: Number(id)
