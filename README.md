@@ -2,12 +2,12 @@
 
 Esta es una **REST API** desarrollada con el framework **Express** de **Node.js** para manejar un sistema de información alojado en una base de datos local con el engine **SQLite**. Desde la API se hace uso de **Prisma Cliente** para realizar los queries a la base de datos:
 
-- Usuarios
-- Productos
-- Categorías
-- Historial de compras
+- Usuarios : Users
+- Productos : Products 
+- Categorías : Category 
+- Historial de compras : purchaseHistory
 
-
+![](.\prisma\image_DBsquema.png)
 
 ## Testing
 
@@ -23,7 +23,64 @@ Esta es una **REST API** desarrollada con el framework **Express** de **Node.js*
 
 - En la base de datos se tiene ya registrado algunas entradas para cada una de las tablas.
 
+- Operaciones de consulta como ejemplo para realizar con el comando `curl` :
 
+  - Obtener registro de todos los usuarios
+    ```bash
+    curl -XGET 'http://localhost:3000/users'
+    ```
+  - Obtener información del usuario con ID 4
+    ```bash
+    curl -XGET 'http://localhost:3000/users/4'
+    ```
+  - Obtener todos los registros de los productos
+    ```bash
+    curl -XGET 'http://localhost:3000/products/'
+    ```
+  - Crear una categoria
+    ```bash
+    curl -XPOST -H "Content-type: application/json" -d '{
+            "name": "neumaticos"
+        }' 'http://localhost:3000/categories/'
+    ```
+  - Crear un producto
+    ```bash
+    curl -XPOST -H "Content-type: application/json" -d '{
+            "name": "Papas fritas la victoria",
+            "price": 2500,
+            "categoryId": 10
+        }' 'http://localhost:3000/products/'
+    ```
+  - Eliminar un usuario con ID 4
+    ```bash
+    curl -XDELETE 'http://localhost:3000/users/4'
+    ```
+  - Realizar una compra con el usuario ID 5, producto con ID 2, cantidad 5
+    ```bash
+    curl -XPOST -H "Content-type: application/json" -d '{
+        "userId": 5,
+        "productId":2,
+        "quantity":5
+    }' 'http://localhost:3000/functions/buy'
+    ```
+  - Realizar compra excediendo la cantidad que hay en inventario
+    ```bash
+    curl -XPOST -H "Content-type: application/json" -d '{
+        "userId": 5,
+        "productId":2,
+        "quantity":99999
+    }' 'http://localhost:3000/functions/buy'
+    ```
+  - Modificar entrada en historial de compras
+    ```bash
+    curl -XPATCH -H "Content-type: application/json" -d '{
+            "userId": 4,
+            "productId": 2,
+            "quantity": 26
+        }' 'http://localhost:3000/purchases/2'
+    ```
+    
+    
 
 ## Estructura de la base de datos
 
@@ -37,47 +94,62 @@ Nota:
 
 ### Usuarios
 
-| **NOMBRE** | **TIPO** |
-| ---------- | -------- |
-| *id        | Int      |
-| name       | String   |
-| lastName   | String   |
-| age        | Int      |
-| tel        | Int      |
-| ?email     | String   |
-| *createdAt | DateTime |
+| **NOMBRE** | **TIPO** | **DESCRIPCIÓN**      |
+| ---------- | -------- | -------------------- |
+| *id        | Int      | ID único del usuario |
+| name       | String   | Nombre               |
+| lastName   | String   | Apellidos            |
+| age        | Int      | Edad                 |
+| tel        | Int      | Telefóno/Celular     |
+| ?email     | String   | Correo eléctronico   |
+| *createdAt | DateTime | Fecha de creación    |
 
 Ejemplo:
 
 ```json
   {
-​    "id": 2,
-​    "name": "Maria",
-​    "lastName": "Lopez",
-​    "age": 25,
-​    "tel": 8888888,
-​    "email": "correo2@domain.com",
-​    "createdAt": "2021-10-23T22:55:46.260Z"
+    "id": 2,
+    "name": "Maria",
+    "lastName": "Lopez",
+    "age": 25,
+    "tel": 8888888,
+    "email": "correo2@domain.com",
+    "createdAt": "2021-10-23T22:55:46.260Z"
   }
 ```
 
 ### Productos
 
-| **NOMBRE**  | **TIPO** |
-| ----------- | -------- |
-| *id         | Int      |
-| ?name       | String   |
-| *price      | Int      |
-| *createdAt  | DateTime |
-| *categoryId | Int      |
-| *stock      | Int      |
+| **NOMBRE**  | **TIPO** | **DESCRIPCIÓN**                               |
+| ----------- | -------- | --------------------------------------------- |
+| *id         | Int      | ID único del producto                         |
+| ?name       | String   | Nombre del producto                           |
+| *price      | Int      | Precio                                        |
+| *createdAt  | DateTime | Fecha de creación                             |
+| *categoryId | Int      | ID del producto en la tabla de Categorías     |
+| *stock      | Int      | Cantidad de unidades disponibles del producto |
 
-### Categorias
+Ejemplo:
 
-| **NOMBRE** | **TIPO** |
-| ---------- | -------- |
-| id         | Int      |
-| ?name      | String   |
+```json
+    {
+        "id": 17,
+        "name": "Televisor",
+        "price": 6500000,
+        "createdAt": "2021-10-24T15:31:57.432Z",
+        "categoryId": 3,
+        "stock": 0,
+    }			
+```
+
+
+
+### Categorías
+
+| **NOMBRE** | **TIPO** | **DESCRIPCIÓN**              |
+| ---------- | -------- | ---------------------------- |
+| id         | Int      | ID único de la categoría     |
+| ?name      | String   | Nombre único de la categoría |
 
 Ejemplo:
 
@@ -92,13 +164,13 @@ Ejemplo:
 
 ### Historial de compras 
 
-| **NOMBRE**      | **TIPO** |
-| --------------- | -------- |
-| *id             | Int      |
-| userId          | Int      |
-| productId       | Int      |
-| *categoryId Int | Int      |
-| *quantity       | Int      |
+| **NOMBRE**  | **TIPO** | DESCRIPCIÓN                      |
+| ----------- | -------- | -------------------------------- |
+| *id         | Int      | ID único de la entrada de compra |
+| userId      | Int      | ID único del usuario             |
+| productId   | Int      | ID único del producto            |
+| *categoryId | Int      | ID único de la categoría         |
+| *quantity   | Int      | Cantidad de unidades compradas   |
 
 Ejemplo:
 
@@ -120,23 +192,23 @@ Las funciones que se disponen para la base de datos de `Usuarios` son las siguie
 
 - Consultar el registro de todos los usuarios. Como respuesta se obtiene un objeto `JSON` con la información.
 
-```http
+```html
 GET http://<server name>/users
 ```
 - Consultar la entrada de un usario en especifico. El `{id}` en el PATH corresponde al ID del usuario a consultar. Se recibe como respuesta un objeto `JSON` con la información de la entrada eliminada
 
-```http
+```html
 GET http://<server name>/users/{id}
 ```
 
 
 - Solicitar la creación de una nueva entrada en la base de datos.
 
-```http
+```html
 POST http://<server name>/users
 ```
 
-Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minimo especificar los siguientes campos:
+Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe mínimo especificar los siguientes campos:
 
 ```json
     {
@@ -151,13 +223,15 @@ Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minim
 - Eliminar entrada de un usuario en la base de datos. El `{id}` en el PATH corresponde al ID del usuario a eliminar. Se recibe como respuesta un objeto `JSON` con la información de la entrada eliminada
 
 
-```http
+```html
 DELETE http://<server name>/users/{id}
 ```
-- Realizar una modificación parcial o completa de una entrada de un usuario en la base de datos. El `id` en el PATH corresponde al ID del usuario a consultar.
+**ADVERTENCIA: Al eliminar un usuario se eliminará automáticamente todos los registros asociados a este producto en las tablas `historial de compras`**
 
-```http
-PATH http://<server name>/users
+- Realizar una modificación parcial o completa de una entrada de un usuario en la base de datos. El `id` en el PATH corresponde al ID del usuario a modificar.
+
+```html
+PATH http://<server name>/users{id}
 ```
 Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minimo especificar alguno de los siguientes campos:
 
@@ -177,18 +251,18 @@ Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minim
 
 - Consultar el registro de todos los productos. Como respuesta se obtiene un objeto `JSON` con la información.
 
-```http
+```html
 GET http://<server name>/products
 ```
 - Consultar la entrada de un producto en especifico. El `{id}` en el PATH corresponde al ID del producto a consultar. Se recibe como respuesta un objeto `JSON` con la información de la entrada eliminada
 
-```http
+```html
 GET http://<server name>/products/{id}
 ```
 
 - Solicitar la creación de una nueva entrada en la base de datos.
 
-```http
+```html
 POST http://<server name>/products
 ```
 Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minimo especificar los siguientes campos:
@@ -205,54 +279,155 @@ Nota: El producto se creará con un stock en inventario igual a cero `0`. Para c
 
 - Añadir o remover una `{cantidad}` especifica de la unidades que hay del producto  con `{id}` indicado en el PATH. Para remover unidades del producto el valor número en `{cantidad}` debe ser negativo, en caso de que la cantidad especificada sea mayor la disponibilidad del producto, se recibirá un mensaje de error 400 indicando lo mismo.  Se obtiene como respuesta un objeto `JSON` con la información de la entrada modificada.
 
-  ```http
+  ```html
   PATH http://<server name>/products/{id}/{cantidad}
   ```
 
 - Eliminar entrada de un producto en la base de datos. El `{id}` en el PATH corresponde al ID del producto a eliminar. Se recibe como respuesta un objeto `JSON` con la información de la entrada eliminada
 
-```http
+```html
 DELETE http://<server name>/products/{id}
 ```
 
-- Realizar una modificación parcial o completa de una entrada de un producto en la base de datos. El `id` en el PATH corresponde al ID del usuario a consultar.
+**ADVERTENCIA: Al eliminar un producto se eliminará automáticamente todos los registros asociados a este producto en las tablas `historial de compras`**
 
-```http
-PATH http://<server name>/products
+- Realizar una modificación parcial o completa de una entrada de un producto en la base de datos. El `id` en el PATH corresponde al ID del producto a modificar.
+
+```html
+PATH http://<server name>/products{id}
 ```
 
 Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minimo especificar alguno de los siguientes campos:
 
 ```json
     {
-        "id": 6,
-        "name": "Francisco",
-        "lastName": "Polaina",
-        "age": 18,
-        "tel": 678678458,
-        "email": "correo442@domain.com",
-        "createdAt": "2021-10-24T12:03:05.481Z"
+        "id": 17,
+        "name": "Televisor",
+        "price": 6500000,
+        "createdAt": "2021-10-24T15:31:57.432Z",
+        "categoryId": 3,
+        "stock": 0
     }
 ```
 
--
+### Categorías
 
-```http
-GET http://<server name>/users
+- Consultar el registro de todos los categorias. Como respuesta se obtiene un objeto `JSON` con la información.
+
+```html
+GET http://<server name>/categories
 ```
 
--
+- Consultar la entrada de una categoría en especifico. El `{id}` en el PATH corresponde al ID de la categoría a consultar. Se recibe como respuesta un objeto `JSON` con la información de la entrada eliminada
 
-```http
-GET http://<server name>/users
-```
--
-
-```http
-GET http://<server name>/users
+```html
+GET http://<server name>/categories/{id}
 ```
 
+- Solicitar la creación de una nueva entrada en la base de datos.
 
+```html
+POST http://<server name>/categories
+```
 
+Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minimo especificar los siguientes campos:
 
+```json
+    {
+        "id": 2,
+        "name": "tecnología"
+    }
+```
+
+- Eliminar entrada de una categoría en la base de datos. El `{id}` en el PATH corresponde al ID de la categoría a eliminar. Se recibe como respuesta un objeto `JSON` con la información de la entrada eliminada
+
+```html
+DELETE http://<server name>/categories/{id}
+```
+
+**ADVERTENCIA: Al eliminar una categoría se eliminará automáticamente todos los registro asociados a esta categoría en las tablas de `productos` y `historial de compras`**
+
+- Realizar una modificación parcial o completa de una entrada de una categoría en la base de datos. El `id` en el PATH corresponde al ID de la categoría a modificar.
+
+```html
+PATH http://<server name>/categories/{id}
+```
+
+Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minimo especificar alguno de los siguientes campos:
+
+```json
+    {
+        "id": 2,
+        "name": "tecnología"
+    }
+```
+
+### Historial de compras
+
+- Consultar el registro de todo el historial de compras. Como respuesta se obtiene un objeto `JSON` con la información.
+
+```html
+GET http://<server name>/purchases
+```
+
+- Consultar la entrada de una compra en especifica. El `{id}` en el PATH corresponde al ID de la compra a consultar. Se recibe como respuesta un objeto `JSON` con la información de la entrada eliminada
+
+```html
+GET http://<server name>/purchases/{id}
+```
+
+- Solicitar la creación de una nueva entrada en la base de datos.
+
+```html
+POST http://<server name>/purchases
+```
+
+Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe minimo especificar los siguientes campos:
+
+```json
+    {
+        "userId": 4,
+        "productId": 2,
+        "quantity": 15
+    }
+```
+
+- Eliminar entrada de una compra en la base de datos. El `{id}` en el PATH corresponde al ID de la entrada de la compra a eliminar. Se recibe como respuesta un objeto `JSON` con la información de la entrada eliminada
+
+```html
+DELETE http://<server name>/purchases/{id}
+```
+
+- Realizar una modificación parcial o completa de una entrada de una categoría en la base de datos. El `id` en el PATH corresponde al ID de la categoría a modificar.
+
+```html
+PATH http://<server name>/purchases/{id}
+```
+
+A diferencia de las funciones anteriores, en esta se debe especificar exactamente los campos mencionados abajo. Se debe se adjuntar un objeto `JSON` al body de la solicitud donde se debe especificar los siguientes campos:
+
+```json
+    {
+        "userId": 4,
+        "productId": 2,
+        "quantity": 15
+    }
+```
+
+### Funciones
+
+- Función de compra. Esta funcion obtiene un objeto `JSON` que debe contener el `{id}` del producto a comprar, la `{cantidad}` y el `{usuario}` que realiza la compra
+
+```html
+POST http://<server name>/functions/buy
+```
+Ejemplo:
+
+```json
+{
+    "userId": 1,
+    "productId":1,
+    "quantity":1
+} 
+```
 

@@ -24,7 +24,6 @@ module.exports.createProduct = async (req, res, next) => {
                 id: categoryId
             }
         })
-        console.log("prisma")
         const product = await prisma.products.create({
             data: {
                 name: name,
