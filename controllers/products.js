@@ -17,15 +17,36 @@ module.exports.getAllProducts = async (req, res, next) => {
 // Añadir nuevo producto a la base de datos
 module.exports.createProduct = async (req, res, next) => {
     try {
+        const { name, price, categoryId } = req.body
+        
+        const category = await prisma.category.findUnique({
+            where: {
+                id: categoryId
+            }
+        })
+        console.log("prisma")
         const product = await prisma.products.create({
-            data: req.body
-               })
+            data:{
+                name: name,
+                price: price,
+                category: {
+                  connect: {
+                    id: categoryId,
+                  },
+                },
+                stock: 0,
+                purchaseQuantity: {
+            
+                },
+              }
+        })
         res.json(product);
     } catch (error) {
         next(error);
     }
 
 }
+
 
 //Consultar producto con ID especificado
 module.exports.getProduct = async (req, res, next) => {
