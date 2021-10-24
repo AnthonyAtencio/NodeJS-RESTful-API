@@ -18,7 +18,7 @@ module.exports.getAllProducts = async (req, res, next) => {
 module.exports.createProduct = async (req, res, next) => {
     try {
         const { name, price, categoryId } = req.body
-        
+
         const category = await prisma.category.findUnique({
             where: {
                 id: categoryId
@@ -26,21 +26,52 @@ module.exports.createProduct = async (req, res, next) => {
         })
         console.log("prisma")
         const product = await prisma.products.create({
-            data:{
+            data: {
                 name: name,
                 price: price,
                 category: {
-                  connect: {
-                    id: categoryId,
-                  },
+                    connect: {
+                        id: categoryId,
+                    },
                 },
                 stock: 0,
                 purchaseQuantity: {
-            
+
                 },
-              }
+            }
         })
         res.json(product);
+    } catch (error) {
+        next(error);
+    }
+
+}
+
+//Se agrega el valor recibido al stock del producto
+module.exports.addProductStock = async (req, res, next) => {
+    try {
+        const { id, quantity } = req.params;
+        const product = await prisma.products.findUnique({
+            where: { id: Number(id) },
+              })
+        const finalStock= product.stock+Number(quantity)
+        if (finalStock< 0) {
+            res.status(400).send("No se pudo realizar la operación debido a que la cantidad solicitada a remover del stock fue mayor a la existente. ¡No puede haber stock negativo!.")
+        } else {
+            const product = await prisma.products.update({
+                where: {
+                    id: Number(id)
+                },
+                data: {
+                    stock: finalStock
+                },
+                include: {
+                    category: true
+                },
+            })
+            res.json(product)
+        }
+
     } catch (error) {
         next(error);
     }
