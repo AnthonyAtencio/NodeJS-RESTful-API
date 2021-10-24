@@ -40,7 +40,7 @@ module.exports.buyProduct = async (req, res, next) => {
                     },
                   },
                   categoryId: categoryId,
-                  quantity: 1,
+                  quantity: quantity,
                 }
               })
             const remainingStock=stock-quantity // Cantidad del producto restante luego de la compra
@@ -56,12 +56,9 @@ module.exports.buyProduct = async (req, res, next) => {
             res.json(purchase);
         }
         else {
-            res.status(400).send("No hay stock disponible del producto");
+            res.status(400).send(`No hay stock disponible del producto para realizar esta compra.`);
         }
 
-
-
-        // Enviar mensaje de compra realizada
     } catch (error) {
         next(error)
     }
