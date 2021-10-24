@@ -28,7 +28,7 @@ model Products {
   createdAt        DateTime          @default(now())
   category         Category          @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   categoryId       Int
-  stock            Int               @default(1)
+  stock            Int               @default(0)
   purchaseQuantity purchaseHistory[]
 }
 
@@ -45,5 +45,5 @@ model purchaseHistory {
   product    Products @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  Int
   categoryId Int      @default(0)
-  quantity   Int      @default(1)
+  quantity   Int      @default(0)
 }
