@@ -2,7 +2,7 @@
   "name": "backend-development-test-1",
   "version": "1.0.0",
   "description": "Test- creación de API",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
