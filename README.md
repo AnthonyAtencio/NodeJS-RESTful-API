@@ -7,7 +7,7 @@ Esta es una **REST API** desarrollada con el framework **Express** de **Node.js*
 - Categorías : Category 
 - Historial de compras : purchaseHistory
 
-![](.\prisma\image_DBsquema.png)
+![](./prisma/image_DBsquema.png)
 
 ## Testing
 
