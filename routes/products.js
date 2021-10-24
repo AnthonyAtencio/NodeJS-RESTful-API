@@ -5,6 +5,7 @@ const { getAllProducts, getProduct, createProduct,
 
 const router = express.Router();
 
+// Operaciones
 router.get('/', getAllProducts);
 
 router.post('/', createProduct);
@@ -14,6 +15,6 @@ router.get('/:id', getProduct);
 router.delete('/:id', deleteProduct);
 
 router.patch('/:id', updateProduct);
-
+//
 module.exports = router;
 

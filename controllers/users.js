@@ -1,7 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-let users = [];
-
 
 //Consultar  todos los usuarios
 module.exports.getAllUsers = async (req, res, next) => {

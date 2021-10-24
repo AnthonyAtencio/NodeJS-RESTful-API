@@ -42,7 +42,7 @@ module.exports.getCategory = async (req, res, next) => {
 }
 
 //Eliminar un categoria con ID especificado,
-//esto elimina tambien todos los productos asociados a la categoria
+//esto elimina tambien todos los productos y registros de compras asociados a la categoria
 module.exports.deleteCategory = async (req, res, next) => {
     try {
         const { id } = req.params;
